@@ -15,9 +15,7 @@ const verifyToken = (token) =>
 	});
 
 const login = async (req, res) => {
-	let request = req.body;
-	const { email, password } = request;
-	console.log('req.body::', req.body);
+	const { email, password } = req.body;
 	if (!email || !password) {
 		console.log('what happened');
 
@@ -50,7 +48,6 @@ const register = async (req, res) => {
 	}
 	try {
 		const user = await User.findOne({ email: email }).select('email').exec();
-		console.log('user::', user);
 
 		if (user) {
 			return res.status(400).send({ message: 'You have an account already' });
