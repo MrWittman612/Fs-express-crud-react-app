@@ -6,6 +6,7 @@ var logger = require('morgan');
 const connectMongoDB = require('./server/utils/connectMongoDB');
 
 var usersRouter = require('./server/api/users/users');
+const { register, login } = require('./server/api/auth');
 // var indexRouter = require('./server/api/routes/index');
 
 var app = express();
@@ -16,6 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 connectMongoDB();
 // app.use('/', indexRouter);
+app.post('/api/login', login);
+app.post('/api/register', register);
 
 app.use('/users', usersRouter);
 
