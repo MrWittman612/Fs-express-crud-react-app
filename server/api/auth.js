@@ -1,9 +1,92 @@
-var express = require('express');
-var router = express.Router();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const config = require('../../config/keys');
+const User = require('./users/user.model');
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-	res.render('index', { title: 'Express' });
-});
+const newToken = (user) => {
+	jwt.sign({ id: user.id }, config.jwt, { expiresIn: config.jwtExp });
+};
 
-module.exports = router;
+const verifyToken = (token) => {
+	new Promise((resolve, reject) => {
+		jwt.verify(token, config.jwt, (err, payload) => {
+			if (err) return reject(err);
+			resolve(payload);
+		});
+	});
+};
+
+const login = async (req, res) => {
+	const { email, password } = req.body;
+	if (!email || !password) {
+		return res.status(400).send({ msg: 'Email and password required' });
+	}
+	try {
+		const user = await User.findOne({ email: email });
+		if (!user) {
+			return res.status(404).send({ msg: 'Please register' });
+		}
+		const match = await bcrypt.compare(password, user.password);
+		if (!match) {
+			return res
+				.status(401)
+				.send({ message: 'Invalid email and passoword combination' });
+		}
+		const token = newToken(user);
+		return res.status(201).send({ token });
+	} catch (error) {
+		return res.status(500).end();
+	}
+};
+exports.login = login;
+
+const register = async (req, res) => {
+	const { email, password, name } = req.body;
+	if (!email || !password) {
+		return res.status(400).send({ message: 'Email and password required' });
+	}
+	try {
+		const user = await User.findOne({ email: email }).select('email').exec();
+		if (user) {
+			return res.status(400).send({ message: 'You have an account already' });
+		}
+
+		const hash = await bcrypt.hash(password, 10);
+
+		const newUser = {
+			name,
+			email,
+			password: hash,
+		};
+		const createUserResponse = await User.create(newUser);
+		const freshToken = newToken(createUserResponse);
+		return res.status(200).send({ freshToken });
+	} catch (error) {
+		return res.status(500).send({ message: 'You have an account already' });
+	}
+};
+exports.register = register;
+
+const protectedRoute = async (req, res, next) => {
+	const bearer = req.headers.authorization;
+	if (!bearer || !bearer.startsWith('Bearer ')) {
+		return res.status(401).end();
+	}
+	const token = bearer.split('Bearer ')[1].trim();
+	if (!token) {
+		return res.status(401).end();
+	}
+	let payload;
+	try {
+		payload = verifyToken(token);
+	} catch (error) {
+		return res.status(401).end();
+	}
+	const user = await User.findById(payload.id);
+	if (!user) {
+		return res.status(401).end();
+	}
+	req.user = user;
+	return next();
+};
+exports.protectedRoute = protectedRoute;
