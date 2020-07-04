@@ -5,7 +5,13 @@
 	"main": "./bin/www",
 	"scripts": {
 		"start": "node .",
-		"dev": "nodemon ."
+		"dev": "concurrently \"npm run dev:server\" && \"npm run client\" ",
+		"dev:server": "nodemon .",
+		"client": "npm run start --prefix client",
+		"test": "jest",
+		"test:server": "npm run test",
+		"test:client": "npm run test --prefix client",
+		"coverage:server": "jest --collect-coverage"
 	},
 	"dependencies": {
 		"bcrypt": "^5.0.0",
