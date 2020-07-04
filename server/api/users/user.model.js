@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 var UserModelSchema = new Schema({
 	name: String,
-	age: Date,
+	email: String,
 	password: String,
 });
 // Compile model from schema
-var UserModel = mongoose.model('UserModel', UserModelSchema);
+module.exports = UserModel = mongoose.model('UserModel', UserModelSchema);

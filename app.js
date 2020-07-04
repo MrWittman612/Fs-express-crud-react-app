@@ -5,9 +5,8 @@ var logger = require('morgan');
 
 const connectMongoDB = require('./server/utils/connectMongoDB');
 
-var usersRouter = require('./server/api/users/users');
-const { register, login } = require('./server/api/auth');
-// var indexRouter = require('./server/api/routes/index');
+var userRouter = require('./server/api/users/user.router');
+const { register, login, protectedRoute } = require('./server/api/auth');
 
 var app = express();
 
@@ -20,7 +19,7 @@ connectMongoDB();
 app.post('/api/login', login);
 app.post('/api/register', register);
 
-app.use('/users', usersRouter);
+app.use('/api/user', protectedRoute, userRouter);
 
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static('client/build'));

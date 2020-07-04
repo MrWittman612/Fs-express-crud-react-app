@@ -1,0 +1,42 @@
+// http://localhost:3001
+// This file is for working with
+// REST Client Exension for Visual Studio Code
+// REST Client allows you to send HTTP request and view the response in Visual Studio Code directly.
+
+
+@baseURL = http://localhost:3001/api
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMDAzMjYxOTNhNjY1MWVhNGUwNDI0OSIsImlhdCI6MTU5Mzg0ODQxNywiZXhwIjoxNTk2NDQwNDE3fQ.rjXAxJnjwSrGqxlLP3jci7_IPIB_AaAR5ud0KVcB858
+
+###
+
+# @name getUser
+
+GET {{baseURL}}/user HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+
+# @name login
+
+POST {{baseURL}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email":"test@test.com",
+  "password":"password"
+}
+
+###
+
+# @name register
+
+POST {{baseURL}}/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "name":"Jerry",
+  "email":"test@test.com",
+  "password":"password"
+}
