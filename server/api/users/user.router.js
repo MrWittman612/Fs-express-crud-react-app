@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
-
-const me = async (req, res) => res.status(200).send(req.user);
+const { me } = require('./user.controller');
 
 /* GET users listing. */
-router.get('/', me);
+router.route('/').get(me);
 
 module.exports = router;
