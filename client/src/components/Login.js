@@ -17,6 +17,7 @@ export default function Login() {
 
   const loginUser = async (event) => {
     event.preventDefault();
+
     console.log('log formData::', formData);
     const config = {
       headers: {
