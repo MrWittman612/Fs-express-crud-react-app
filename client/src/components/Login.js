@@ -35,16 +35,36 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        // flexDirection: 'row',
+        alignItems: 'center',
+        // flexWrap: 'wrap',
+        height: '100vh',
+      }}
+    >
       <h1>Login form</h1>
       <form onSubmit={loginUser}>
-        <input id='email' type='text' name='email' onChange={updateFormData} />
-        <input
-          id='password'
-          type='text'
-          name='password'
-          onChange={updateFormData}
-        />
+        <ul>
+          <li>
+            <input
+              id='email'
+              type='text'
+              name='email'
+              onChange={updateFormData}
+            />
+          </li>
+          <li>
+            <input
+              id='password'
+              type='text'
+              name='password'
+              onChange={updateFormData}
+            />
+          </li>
+        </ul>
+
         <button type='submit' value='Login'>
           Login
         </button>

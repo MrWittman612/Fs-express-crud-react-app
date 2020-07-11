@@ -12,9 +12,13 @@ import { checkAuth } from './utils/auth';
 import { PrivateRoute } from './utils/PrivateRoute';
 import { Home } from './components/Home';
 
-checkAuth();
+// import UserContext from './content/user/UserContext';
 function App() {
+  React.useEffect(() => {
+    checkAuth();
+  }, []);
   return (
+    // <UserContext>
     <Router>
       <Fragment>
         <Switch>
@@ -28,6 +32,7 @@ function App() {
         </Switch>
       </Fragment>
     </Router>
+    // </UserContext>
   );
 }
 
